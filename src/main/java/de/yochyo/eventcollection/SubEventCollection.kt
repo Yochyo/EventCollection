@@ -1,6 +1,5 @@
 package de.yochyo.eventcollection
 
-import de.yochyo.eventmanager.EventCollection
 import de.yochyo.eventmanager.Listener
 import java.util.function.Predicate
 class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: EventCollection<T>, filter: (e: T) -> Boolean) : EventCollection<T>(c) {
