@@ -1,7 +1,11 @@
 package de.yochyo.eventcollection
 
-import de.yochyo.eventcollection.events.*
+import de.yochyo.eventcollection.events.OnAddElementEvent
+import de.yochyo.eventcollection.events.OnClearEvent
+import de.yochyo.eventcollection.events.OnRemoveElementEvent
+import de.yochyo.eventcollection.events.OnUpdateEvent
 import de.yochyo.eventmanager.EventHandler
+import java.util.function.Consumer
 import java.util.function.Predicate
 
 
@@ -93,8 +97,10 @@ open class EventCollection<T>(@Deprecated("Will Not throw events") val collectio
         return removed
     }
 
-    override fun iterator(): MutableIterator<T> {
-        val i = collection.iterator()
+    override fun iterator(): MutableIterator<T> = getIterator(collection)
+
+    protected fun getIterator(c: MutableCollection<T>): MutableIterator<T> {
+        val i = c.iterator()
         return object : MutableIterator<T> {
             private var current: T? = null
             override fun hasNext() = i.hasNext()
@@ -116,6 +122,9 @@ open class EventCollection<T>(@Deprecated("Will Not throw events") val collectio
     fun notifyChange() {
         onUpdate.trigger(OnUpdateEvent(collection))
     }
+
+    override fun stream() = collection.stream()
+    override fun forEach(action: Consumer<in T>?) = collection.forEach(action)
 
 
     @Deprecated("Will not trigger events")
