@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a55e7287-8a81-49e2-a31d-04424507a406" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/yochyo/eventcollection/ObservingEventCollection.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/yochyo/eventcollection/observable/IObservableObject.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/de/yochyo/eventcollection/observable/Observable.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/yochyo/eventcollection/SubEventCollection.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/yochyo/eventcollection/SubEventCollection.kt" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,30 +17,83 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="1TIqoTso7WrLKWmrwPFkkN4CQ96" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="android.sdk.path" value="D:/Programme/Android/Sdk" />
-    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../EventManager" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="application.passwordSafe" />
   </component>
   <component name="RecentsManager">
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
       <recent name="de.yochyo.eventcollection" />
     </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="de.yochyo.eventcollection" />
+      <recent name="de.yochyo.eventcollection.observable" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Code\InjelliJ\maven projects\EventCollection\src\main\java\de\yochyo\eventcollection" />
+    </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="RunManager">
+    <configuration name="TestKt" type="JetRunConfigurationType" factoryName="Kotlin" temporary="true" nameIsGenerated="true">
+      <module name="EventCollection" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" value="de.yochyo.eventcollection.TestKt" />
+      <option name="WORKING_DIRECTORY" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <item itemvalue="Kotlin.TestKt" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -54,6 +108,35 @@
       <option name="presentableId" value="Default" />
       <updated>1573158131402</updated>
     </task>
+    <task id="LOCAL-00001" summary="add gitignore file, update dependencies">
+      <created>1573759242888</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1573759242888</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add .idea folder to gitignore">
+      <created>1584619417686</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1584619417687</updated>
+    </task>
+    <task id="LOCAL-00003" summary="iterator triggers now events, event moved to Events.kt">
+      <created>1584619760434</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1584619760435</updated>
+    </task>
+    <task id="LOCAL-00004" summary="iterator triggers now events, event moved to Events.kt">
+      <created>1584619829683</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1584619829683</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -68,5 +151,54 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add .idea folder to gitignore" />
+    <MESSAGE value="add gitignore file, update dependencies" />
+    <MESSAGE value="iterator triggers now events, event moved to Events.kt" />
+    <MESSAGE value="add ObservableObjects and an EventCollection for it" />
+    <option name="LAST_COMMIT_MESSAGE" value="add ObservableObjects and an EventCollection for it" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="523" y="39" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1584616202989">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="523" y="39" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1584616202989" />
+    <state x="548" y="68" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog" timestamp="1584618865136">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="548" y="68" key="#org.jetbrains.kotlin.idea.refactoring.move.moveDeclarations.ui.MoveKotlinTopLevelDeclarationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584618865136" />
+    <state x="520" y="272" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1584619241804">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="520" y="272" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1536.824@0.0.1536.824" timestamp="1584619241804" />
+    <state x="417" y="11" key="CommitChangelistDialog2" timestamp="1584620019509">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="417" y="11" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1584620019509" />
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom" timestamp="1584619784092">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584619784092" />
+    <state width="1493" height="210" key="GridCell.Tab.0.center" timestamp="1584619784091">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584619784091" />
+    <state width="1493" height="210" key="GridCell.Tab.0.left" timestamp="1584619784090">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584619784090" />
+    <state width="1493" height="210" key="GridCell.Tab.0.right" timestamp="1584619784091">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584619784091" />
+    <state x="520" y="126" key="RollbackChangesDialog" timestamp="1584619434696">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="520" y="126" key="RollbackChangesDialog/0.0.1536.824@0.0.1536.824" timestamp="1584619434696" />
+    <state x="425" y="66" width="670" height="676" key="search.everywhere.popup" timestamp="1584613636304">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="425" y="66" width="670" height="676" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1584613636304" />
   </component>
 </project>
