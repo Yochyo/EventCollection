@@ -6,7 +6,21 @@ import de.yochyo.eventcollection.events.OnRemoveElementEvent
 import de.yochyo.eventmanager.Listener
 import java.util.function.Predicate
 
-open class SubEventCollection<T>(private val c: MutableCollection<T>, val parentCollection: EventCollection<T>, filter: (e: T) -> Boolean) : EventCollection<T>(c) {
+/**
+ * @see EventCollection
+ * An EventCollection that contains all elements of it's parent EventCollection
+ * which fulfil the condition that filter() return true.
+ * All changes in it's parent are reflected in it.
+ * All changes in it are reflected in the parent.
+ * For example: If an element is added to the parent EventCollection, it will (if filter() returns true)
+ * be added to the SubEventCollection. If an element is added to the parent, it will be added to the SubEventCollection
+ *
+ * ATTENTION: If you don't need it anymore, call destroy() to remove it's listeners from the parent EventCollection
+ *
+ * @param parentCollection the parent EventCollection which content should be reflected here
+ * @param filter if filter() returns true, an element will be contained in here
+ */
+open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: EventCollection<T>, filter: (e: T) -> Boolean) : EventCollection<T>(c) {
     override fun add(element: T) = parentCollection.add(element)
     override fun addAll(elements: Collection<T>) = parentCollection.addAll(elements)
     override fun remove(element: T) = parentCollection.remove(element)
@@ -33,13 +47,13 @@ open class SubEventCollection<T>(private val c: MutableCollection<T>, val parent
     }
 
     protected fun addToCollection(element: T) {
-        c.add(element)
-        onAddElement.trigger(OnAddElementEvent(c, element))
+        collection.add(element)
+        onAddElement.trigger(OnAddElementEvent(collection, element))
     }
 
     protected fun removeFromCollection(element: T) {
-        c.remove(element)
-        onRemoveElement.trigger(OnRemoveElementEvent(c, element))
+        collection.remove(element)
+        onRemoveElement.trigger(OnRemoveElementEvent(collection, element))
     }
 
     init {

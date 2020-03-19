@@ -8,7 +8,20 @@ import de.yochyo.eventmanager.EventHandler
 import java.util.function.Consumer
 import java.util.function.Predicate
 
-
+/**
+ * An EventCollection is a collection that triggers events on changes.
+ * Uses for it are for example GUI's that work with a changing list
+ *
+ * @param collection the collection the data is saved into. Depending on your use case, any MutableCollection can be used.
+ * This variable is public BUT should not be used if you don't know what you're code is doing or will do, as changes
+ * will not trigger events
+ * @param T type of elements contained in the collection
+ *
+ * @property onUpdate triggers an event when the collection is changed
+ * @property onClear triggers an event when the collection is cleared
+ * @property onAddElement triggers an event when an element is added to the collection
+ * @property onRemoveElement triggers an event when an element is removed from the collection
+ */
 open class EventCollection<T>(@Deprecated("Will Not throw events") val collection: MutableCollection<T>) : MutableCollection<T> {
     val onUpdate = EventHandler<OnUpdateEvent<T>>()
     val onClear = object : EventHandler<OnClearEvent<T>>() {
@@ -28,10 +41,6 @@ open class EventCollection<T>(@Deprecated("Will Not throw events") val collectio
             super.trigger(e)
             notifyChange()
         }
-    }
-
-    init {
-        notifyChange()
     }
 
     override val size: Int get() = collection.size
