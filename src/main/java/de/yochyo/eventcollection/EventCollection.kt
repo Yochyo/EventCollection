@@ -100,7 +100,7 @@ open class EventCollection<T>(@Deprecated("Will Not throw events") val collectio
             override fun hasNext() = i.hasNext()
             override fun next(): T {
                 val next = i.next()
-                current = i.next()
+                current = next
                 return next
             }
 
