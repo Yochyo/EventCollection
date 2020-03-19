@@ -14,6 +14,4 @@ class Observable<T>(t: T) : IObservableObject<Observable<T>, T> {
 
     override val onChange = EventHandler<OnChangeObjectEvent<Observable<T>, T>>()
     override fun toString() = value.toString()
-    override fun hashCode() = value.hashCode()
-    override fun equals(other: Any?) = value?.equals(other) ?: false
 }
