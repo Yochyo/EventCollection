@@ -6,8 +6,9 @@ import de.yochyo.eventmanager.EventHandler
 class Observable<T>(t: T) : IObservableObject<Observable<T>, T> {
     var value = t
         set(value) {
-            onChange.trigger(OnChangeObjectEvent(this, field))
+            val oldValue = field
             field = value
+            onChange.trigger(OnChangeObjectEvent(this, oldValue))
         }
 
 
