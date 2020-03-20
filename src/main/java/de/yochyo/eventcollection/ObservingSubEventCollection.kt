@@ -19,7 +19,12 @@ class ObservingSubEventCollection<T : IObservableObject<T, A>, A>(c: MutableColl
         else removeFromCollection(it.new)
     }
 
-    val onElementChange = EventHandler<OnChangeObjectEvent<T, A>>()
+    val onElementChange = object : EventHandler<OnChangeObjectEvent<T, A>>() {
+        override fun trigger(e: OnChangeObjectEvent<T, A>) {
+            super.trigger(e)
+            notifyChange()
+        }
+    }
 
     init {
         c.forEach { it.onChange.registerListener(onChangeListener) }
