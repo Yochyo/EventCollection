@@ -1,9 +1,10 @@
 package de.yochyo.eventcollection
 
-import de.yochyo.eventcollection.events.OnAddElementEvent
+import de.yochyo.eventcollection.events.OnAddElementsEvent
 import de.yochyo.eventcollection.events.OnClearEvent
-import de.yochyo.eventcollection.events.OnRemoveElementEvent
+import de.yochyo.eventcollection.events.OnRemoveElementsEvent
 import de.yochyo.eventmanager.Listener
+import java.util.*
 import java.util.function.Predicate
 
 /**
@@ -35,25 +36,29 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
             onClear.trigger(OnClearEvent(c))
         }
     }
-    private val onAddElementParent = object : Listener<OnAddElementEvent<T>>() {
-        override fun onEvent(e: OnAddElementEvent<T>) {
-            if (filter(e.element)) addToCollection(e.element)
+    private val onAddElementParent = object : Listener<OnAddElementsEvent<T>>() {
+        override fun onEvent(e: OnAddElementsEvent<T>) {
+            val add = LinkedList<T>()
+            e.elements.forEach { if (filter(it)) add += it }
+            addToCollection(add)
         }
     }
-    private val onRemoveElementParent = object : Listener<OnRemoveElementEvent<T>>() {
-        override fun onEvent(e: OnRemoveElementEvent<T>) {
-            if (filter(e.element)) removeFromCollection(e.element)
+    private val onRemoveElementParent = object : Listener<OnRemoveElementsEvent<T>>() {
+        override fun onEvent(e: OnRemoveElementsEvent<T>) {
+            val remove = LinkedList<T>()
+            e.elements.forEach { if (filter(it)) remove += it }
+            removeFromCollection(remove)
         }
     }
 
-    protected fun addToCollection(element: T) {
-        collection.add(element)
-        onAddElement.trigger(OnAddElementEvent(collection, element))
+    protected fun addToCollection(elements: Collection<T>) {
+        collection.addAll(elements)
+        onAddElements.trigger(OnAddElementsEvent(collection, elements))
     }
 
-    protected fun removeFromCollection(element: T) {
-        collection.remove(element)
-        onRemoveElement.trigger(OnRemoveElementEvent(collection, element))
+    protected fun removeFromCollection(elements: Collection<T>) {
+        collection.removeAll(elements)
+        onRemoveElements.trigger(OnRemoveElementsEvent(collection, elements))
     }
 
     init {
@@ -61,13 +66,13 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
             if (filter(e)) c += e
 
         parentCollection.onClear.registerListener(onClearParent)
-        parentCollection.onAddElement.registerListener(onAddElementParent)
-        parentCollection.onRemoveElement.registerListener(onRemoveElementParent)
+        parentCollection.onAddElements.registerListener(onAddElementParent)
+        parentCollection.onRemoveElements.registerListener(onRemoveElementParent)
     }
 
     fun destroy() {
         parentCollection.onClear.removeListener(onClearParent)
-        parentCollection.onAddElement.removeListener(onAddElementParent)
-        parentCollection.onRemoveElement.removeListener(onRemoveElementParent)
+        parentCollection.onAddElements.removeListener(onAddElementParent)
+        parentCollection.onRemoveElements.removeListener(onRemoveElementParent)
     }
 }

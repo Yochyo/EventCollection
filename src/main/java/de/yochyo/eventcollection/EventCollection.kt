@@ -1,10 +1,8 @@
 package de.yochyo.eventcollection
 
-import de.yochyo.eventcollection.events.OnAddElementEvent
-import de.yochyo.eventcollection.events.OnClearEvent
-import de.yochyo.eventcollection.events.OnRemoveElementEvent
-import de.yochyo.eventcollection.events.OnUpdateEvent
+import de.yochyo.eventcollection.events.*
 import de.yochyo.eventmanager.EventHandler
+import java.util.*
 import java.util.function.Consumer
 import java.util.function.Predicate
 
@@ -19,8 +17,8 @@ import java.util.function.Predicate
  *
  * @property onUpdate triggers an event when the collection is changed
  * @property onClear triggers an event when the collection is cleared
- * @property onAddElement triggers an event when an element is added to the collection
- * @property onRemoveElement triggers an event when an element is removed from the collection
+ * @property onAddElements triggers an event when an element is added to the collection
+ * @property onRemoveElements triggers an event when an element is removed from the collection
  */
 open class EventCollection<T>(@Deprecated("Will Not throw events") val collection: MutableCollection<T>) : MutableCollection<T> {
     val onUpdate = EventHandler<OnUpdateEvent<T>>()
@@ -30,14 +28,14 @@ open class EventCollection<T>(@Deprecated("Will Not throw events") val collectio
             notifyChange()
         }
     }
-    val onAddElement = object : EventHandler<OnAddElementEvent<T>>() {
-        override fun trigger(e: OnAddElementEvent<T>) {
+    val onAddElements = object : EventHandler<OnAddElementsEvent<T>>() {
+        override fun trigger(e: OnAddElementsEvent<T>) {
             super.trigger(e)
             notifyChange()
         }
     }
-    val onRemoveElement = object : EventHandler<OnRemoveElementEvent<T>>() {
-        override fun trigger(e: OnRemoveElementEvent<T>) {
+    val onRemoveElements = object : EventHandler<OnRemoveElementsEvent<T>>() {
+        override fun trigger(e: OnRemoveElementsEvent<T>) {
             super.trigger(e)
             notifyChange()
         }
@@ -52,20 +50,21 @@ open class EventCollection<T>(@Deprecated("Will Not throw events") val collectio
     override fun add(element: T): Boolean {
         val res = collection.add(element)
         if (res)
-            onAddElement.trigger(OnAddElementEvent(collection, element))
+            onAddElements.trigger(OnAddElementsEvent(collection, listOf(element)))
         return res
     }
 
     override fun addAll(elements: Collection<T>): Boolean {
-        var res = false
-        for (element in elements) if (add(element)) res = true
-        return res
+        val added = LinkedList<T>()
+        for (element in elements) if (collection.add(element)) added += element
+        if(added.isNotEmpty()) onAddElements.trigger(OnAddElementsEvent(collection, added))
+        return added.isNotEmpty()
     }
 
     override fun remove(element: T): Boolean {
         val res = collection.remove(element)
         if (res)
-            onRemoveElement.trigger(OnRemoveElementEvent(collection, element))
+            onRemoveElements.trigger(OnRemoveElementsEvent(collection, listOf(element)))
         return res
     }
 
@@ -75,35 +74,38 @@ open class EventCollection<T>(@Deprecated("Will Not throw events") val collectio
     }
 
     override fun removeAll(elements: Collection<T>): Boolean {
-        var removed = false
-        for (e in elements) if (remove(e)) removed = true
-        return removed
+        val removed = LinkedList<T>()
+        for (e in elements) if (collection.remove(e)) removed += e
+        if(removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
+        return removed.isNotEmpty()
     }
 
     override fun removeIf(filter: Predicate<in T>): Boolean {
-        var removed = false
+        val removed = LinkedList<T>()
         val iter = iterator()
         while (iter.hasNext()) {
-            if (filter.test(iter.next())) {
+            val current = iter.next()
+            if (filter.test(current)) {
+                removed += current
                 iter.remove()
-                removed = true
             }
         }
-        return removed
+        if(removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
+        return removed.isNotEmpty()
     }
 
     override fun retainAll(elements: Collection<T>): Boolean {
         val iter = collection.iterator()
-        var removed = false
+        val removed = LinkedList<T>()
         while (iter.hasNext()) {
             val current = iter.next()
             if (!elements.contains(current)) {
+                removed += current
                 iter.remove()
-                onRemoveElement.trigger(OnRemoveElementEvent(collection, current))
-                removed = true
             }
         }
-        return removed
+        if(removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
+        return removed.isNotEmpty()
     }
 
     override fun iterator(): MutableIterator<T> = getIterator(collection)
@@ -123,7 +125,7 @@ open class EventCollection<T>(@Deprecated("Will Not throw events") val collectio
                 i.remove()
                 val element = current
                 if (element != null)
-                    onRemoveElement.trigger(OnRemoveElementEvent(collection, element))
+                    onRemoveElements.trigger(OnRemoveElementsEvent(collection, listOf(element)))
             }
         }
     }

@@ -21,18 +21,18 @@ class OnClearEvent<T>(val collection: Collection<T>) : Event()
 /**
  * Event triggered when an element is added to the EventCollection.
  * @param collection the updated collection
- * @param element element added to the collection
+ * @param elements elements added to the collection
  * @param T type of elements contained in the collection
  */
-class OnAddElementEvent<T>(val collection: Collection<T>, val element: T) : Event()
+class OnAddElementsEvent<T>(val collection: Collection<T>, val elements: Collection<T>) : Event()
 
 /**
  * Event triggered when an element is removed from the EventCollection.
  * @param collection the updated collection
- * @param element element removed from the collection
+ * @param elements elements removed from the collection
  * @param T type of elements contained in the collection
  */
-class OnRemoveElementEvent<T>(val collection: Collection<T>, val element: T) : Event()
+class OnRemoveElementsEvent<T>(val collection: Collection<T>, val elements: Collection<T>) : Event()
 
 /**
  * Event triggered when an IObservableObject is changed

@@ -16,7 +16,7 @@ import de.yochyo.eventmanager.Listener
 open class ObservingSubEventCollection<T : IObservableObject<T, A>, A>(c: MutableCollection<T>, parentCollection: ObservingEventCollection<T, A>, filter: (e: T) -> Boolean) : SubEventCollection<T>(c, parentCollection, filter) {
     private val onChangeListener = Listener.create<OnChangeObjectEvent<T, A>> {
         if (filter(it.new)) onElementChange.trigger(OnChangeObjectEvent(it.new, it.arg))
-        else removeFromCollection(it.new)
+        else removeFromCollection(listOf(it.new))
     }
 
     val onElementChange = object : EventHandler<OnChangeObjectEvent<T, A>>() {
@@ -28,11 +28,11 @@ open class ObservingSubEventCollection<T : IObservableObject<T, A>, A>(c: Mutabl
 
     init {
         c.forEach { it.onChange.registerListener(onChangeListener) }
-        onAddElement.registerListener {
-            it.element.onChange.registerListener(onChangeListener)
+        onAddElements.registerListener {
+            it.elements.forEach { element -> element.onChange.registerListener(onChangeListener) }
         }
-        onRemoveElement.registerListener {
-            it.element.onChange.removeListener(onChangeListener)
+        onRemoveElements.registerListener {
+            it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) }
         }
     }
 }
