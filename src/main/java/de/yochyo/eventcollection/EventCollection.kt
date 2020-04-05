@@ -20,7 +20,7 @@ import java.util.function.Predicate
  * @property onAddElements triggers an event when an element is added to the collection
  * @property onRemoveElements triggers an event when an element is removed from the collection
  */
-open class EventCollection<T>(@Deprecated("Will Not throw events") val collection: MutableCollection<T>) : MutableCollection<T> {
+open class EventCollection<T>(protected val collection: MutableCollection<T>) : MutableCollection<T> {
     val onUpdate = EventHandler<OnUpdateEvent<T>>()
     val onClear = object : EventHandler<OnClearEvent<T>>() {
         override fun trigger(e: OnClearEvent<T>) {
