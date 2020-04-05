@@ -21,4 +21,9 @@ interface IEventCollection<T>: MutableCollection<T> {
     fun removeOnRemoveElementsListener(l: Listener<OnRemoveElementsEvent<T>>): Boolean
     fun removeOnClearListener(l: Listener<OnClearEvent<T>>): Boolean
     fun removeOnUpdateListener(l: Listener<OnUpdateEvent<T>>): Boolean
+
+    fun triggerOnAddElementsEvent(e: OnAddElementsEvent<T>)
+    fun triggerOnRemoveElementsEvent(e: OnRemoveElementsEvent<T>)
+    fun triggerOnClearEvent(e: OnClearEvent<T>)
+    fun triggerOnUpdateEvent(e: OnUpdateEvent<T>)
 }

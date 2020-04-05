@@ -36,4 +36,5 @@ open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: 
     override fun registerOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.registerListener(l)
     override fun registerOnElementChangeListener(priority: Int, l: (e: OnChangeObjectEvent<T, A>) -> Unit) = onElementChange.registerListener(priority, l)
     override fun removeOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.removeListener(l)
+    override fun triggerOnElementChangeEvent(e: OnChangeObjectEvent<T, A>) = onElementChange.trigger(e)
 }

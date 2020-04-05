@@ -63,6 +63,10 @@ open class EventCollection<T>(protected val collection: MutableCollection<T>) : 
     override fun removeOnClearListener(l: Listener<OnClearEvent<T>>) = onClear.removeListener(l)
     override fun removeOnUpdateListener(l: Listener<OnUpdateEvent<T>>) = onUpdate.removeListener(l)
 
+    override fun triggerOnAddElementsEvent(e: OnAddElementsEvent<T>) = onAddElements.trigger(e)
+    override fun triggerOnRemoveElementsEvent(e: OnRemoveElementsEvent<T>) = onRemoveElements.trigger(e)
+    override fun triggerOnClearEvent(e: OnClearEvent<T>) = onClear.trigger(e)
+    override fun triggerOnUpdateEvent(e: OnUpdateEvent<T>) = onUpdate.trigger(e)
 
     override val size: Int get() = collection.size
     override fun contains(element: T) = collection.contains(element)
