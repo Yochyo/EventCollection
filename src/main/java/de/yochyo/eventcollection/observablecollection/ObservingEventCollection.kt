@@ -14,9 +14,9 @@ import de.yochyo.eventmanager.Listener
  *
  * @property onElementChange triggers an event when an element in the collection is changed (calls an OnChangeObjectEvent)
  */
-open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: MutableCollection<T>) : EventCollection<T>(collection) {
+open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: MutableCollection<T>) : EventCollection<T>(collection), IObservableCollection<T, A> {
     private val onChangeListener = Listener.create<OnChangeObjectEvent<T, A>> { onElementChange.trigger(OnChangeObjectEvent(it.new, it.arg)) }
-    val onElementChange = object : EventHandler<OnChangeObjectEvent<T, A>>() {
+    protected val onElementChange = object : EventHandler<OnChangeObjectEvent<T, A>>() {
         override fun trigger(e: OnChangeObjectEvent<T, A>) {
             super.trigger(e)
             notifyChange()
@@ -32,4 +32,8 @@ open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: 
             it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) }
         }
     }
+
+    override fun registerOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.registerListener(l)
+    override fun registerOnElementChangeListener(priority: Int, l: (e: OnChangeObjectEvent<T, A>) -> Unit) = onElementChange.registerListener(priority, l)
+    override fun unregisterOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.removeListener(l)
 }
