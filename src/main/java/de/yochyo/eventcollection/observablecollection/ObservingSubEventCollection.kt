@@ -1,5 +1,7 @@
-package de.yochyo.eventcollection
+package de.yochyo.eventcollection.observablecollection
 
+import de.yochyo.eventcollection.EventCollection
+import de.yochyo.eventcollection.SubEventCollection
 import de.yochyo.eventcollection.events.OnChangeObjectEvent
 import de.yochyo.eventcollection.observable.IObservableObject
 import de.yochyo.eventmanager.EventHandler
