@@ -65,14 +65,14 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
         for (e in parentCollection)
             if (filter(e)) c += e
 
-        parentCollection.onClear.registerListener(onClearParent)
-        parentCollection.onAddElements.registerListener(onAddElementParent)
-        parentCollection.onRemoveElements.registerListener(onRemoveElementParent)
+        parentCollection.registerOnClearListener(onClearParent)
+        parentCollection.registerOnAddElementsListener(onAddElementParent)
+        parentCollection.registerOnRemoveElementsListener(onRemoveElementParent)
     }
 
     fun destroy() {
-        parentCollection.onClear.removeListener(onClearParent)
-        parentCollection.onAddElements.removeListener(onAddElementParent)
-        parentCollection.onRemoveElements.removeListener(onRemoveElementParent)
+        parentCollection.removeOnClearListener(onClearParent)
+        parentCollection.removeOnAddElementsListener(onAddElementParent)
+        parentCollection.removeOnRemoveElementsListener(onRemoveElementParent)
     }
 }
