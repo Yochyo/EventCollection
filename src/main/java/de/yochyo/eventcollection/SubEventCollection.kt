@@ -21,7 +21,7 @@ import java.util.function.Predicate
  * @param parentCollection the parent EventCollection which content should be reflected here
  * @param filter if filter() returns true, an element will be contained in here
  */
-open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: EventCollection<T>, filter: (e: T) -> Boolean) : EventCollection<T>(c) {
+open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: IEventCollection<T>, filter: (e: T) -> Boolean) : EventCollection<T>(c) {
     override fun add(element: T) = parentCollection.add(element)
     override fun addAll(elements: Collection<T>) = parentCollection.addAll(elements)
     override fun remove(element: T) = parentCollection.remove(element)
