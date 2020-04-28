@@ -22,7 +22,7 @@ open class ObservingSubEventCollection<T : IObservableObject<T, A>, A>(c: Mutabl
         else removeFromCollection(listOf(it.new))
     }
 
-    protected val onElementChange = object : EventHandler<OnChangeObjectEvent<T, A>>() {
+    val onElementChange = object : EventHandler<OnChangeObjectEvent<T, A>>() {
         override fun trigger(e: OnChangeObjectEvent<T, A>) {
             super.trigger(e)
             notifyChange()
