@@ -42,3 +42,11 @@ class OnRemoveElementsEvent<T>(val collection: Collection<T>, val elements: Coll
  * @param A type of arg
  */
 class OnChangeObjectEvent<T, A>(val new: T, val arg: A) : Event()
+
+/**
+ * Event triggered when the backing collection of an EventCollection is replaced
+ * @param old the old collection
+ * @param new the new collection
+ * @param T type of collection elements
+ */
+class OnReplaceCollectionEvent<T>(val old: Collection<T>, val new: Collection<T>): Event()

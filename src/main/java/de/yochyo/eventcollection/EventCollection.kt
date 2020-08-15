@@ -1,8 +1,6 @@
 package de.yochyo.eventcollection
 
 import de.yochyo.eventcollection.events.*
-import de.yochyo.eventcollection.observable.IObservableObject
-import de.yochyo.eventcollection.observablecollection.IObservableCollection
 import de.yochyo.eventmanager.EventHandler
 import de.yochyo.eventmanager.Listener
 import java.util.*
@@ -23,7 +21,9 @@ import java.util.function.Predicate
  * @property onAddElements triggers an event when an element is added to the collection
  * @property onRemoveElements triggers an event when an element is removed from the collection
  */
-open class EventCollection<T>(protected val collection: MutableCollection<T>) : IEventCollection<T> {
+open class EventCollection<T>(protected var collection: MutableCollection<T>) : IEventCollection<T> {
+
+
     val onUpdate = EventHandler<OnUpdateEvent<T>>()
     val onClear = object : EventHandler<OnClearEvent<T>>() {
         override fun trigger(e: OnClearEvent<T>) {
@@ -44,29 +44,46 @@ open class EventCollection<T>(protected val collection: MutableCollection<T>) : 
         }
     }
 
+    val onReplaceCollection = object : EventHandler<OnReplaceCollectionEvent<T>>() {
+        override fun trigger(e: OnReplaceCollectionEvent<T>) {
+            super.trigger(e)
+            notifyChange()
+        }
+    }
+
     fun notifyChange() {
         onUpdate.trigger(OnUpdateEvent(collection))
+    }
+
+    override fun replaceCollection(c: MutableCollection<T>) {
+        val old = collection
+        collection = c
+        onReplaceCollection.trigger(OnReplaceCollectionEvent(old, c))
     }
 
     override fun registerOnAddElementsListener(l: Listener<OnAddElementsEvent<T>>) = onAddElements.registerListener(l)
     override fun registerOnRemoveElementsListener(l: Listener<OnRemoveElementsEvent<T>>) = onRemoveElements.registerListener(l)
     override fun registerOnClearListener(l: Listener<OnClearEvent<T>>) = onClear.registerListener(l)
     override fun registerOnUpdateListener(l: Listener<OnUpdateEvent<T>>) = onUpdate.registerListener(l)
+    override fun registerOnReplaceCollectionListener(l: Listener<OnReplaceCollectionEvent<T>>) = onReplaceCollection.registerListener(l)
 
     override fun registerOnAddElementsListener(priority: Int, l: (e: OnAddElementsEvent<T>) -> Unit) = onAddElements.registerListener(priority, l)
     override fun registerOnRemoveElementsListener(priority: Int, l: (e: OnRemoveElementsEvent<T>) -> Unit) = onRemoveElements.registerListener(priority, l)
     override fun registerOnClearListener(priority: Int, l: (e: OnClearEvent<T>) -> Unit) = onClear.registerListener(priority, l)
     override fun registerOnUpdateListener(priority: Int, l: (e: OnUpdateEvent<T>) -> Unit) = onUpdate.registerListener(priority, l)
+    override fun registerOnReplaceCollectionListener(priority: Int, l: (e: OnReplaceCollectionEvent<T>) -> Unit) = onReplaceCollection.registerListener(priority, l)
 
     override fun removeOnAddElementsListener(l: Listener<OnAddElementsEvent<T>>) = onAddElements.removeListener(l)
     override fun removeOnRemoveElementsListener(l: Listener<OnRemoveElementsEvent<T>>) = onRemoveElements.removeListener(l)
     override fun removeOnClearListener(l: Listener<OnClearEvent<T>>) = onClear.removeListener(l)
     override fun removeOnUpdateListener(l: Listener<OnUpdateEvent<T>>) = onUpdate.removeListener(l)
+    override fun removeOnReplaceCollectionListener(l: Listener<OnReplaceCollectionEvent<T>>) = onReplaceCollection.removeListener(l)
 
     override fun triggerOnAddElementsEvent(e: OnAddElementsEvent<T>) = onAddElements.trigger(e)
     override fun triggerOnRemoveElementsEvent(e: OnRemoveElementsEvent<T>) = onRemoveElements.trigger(e)
     override fun triggerOnClearEvent(e: OnClearEvent<T>) = onClear.trigger(e)
     override fun triggerOnUpdateEvent(e: OnUpdateEvent<T>) = onUpdate.trigger(e)
+    override fun triggerOnReplaceCollectionEvent(e: OnReplaceCollectionEvent<T>) = onReplaceCollection.trigger(e)
 
     override val size: Int get() = collection.size
     override fun contains(element: T) = collection.contains(element)
@@ -84,7 +101,7 @@ open class EventCollection<T>(protected val collection: MutableCollection<T>) : 
     override fun addAll(elements: Collection<T>): Boolean {
         val added = LinkedList<T>()
         for (element in elements) if (collection.add(element)) added += element
-        if(added.isNotEmpty()) onAddElements.trigger(OnAddElementsEvent(collection, added))
+        if (added.isNotEmpty()) onAddElements.trigger(OnAddElementsEvent(collection, added))
         return added.isNotEmpty()
     }
 
@@ -103,7 +120,7 @@ open class EventCollection<T>(protected val collection: MutableCollection<T>) : 
     override fun removeAll(elements: Collection<T>): Boolean {
         val removed = LinkedList<T>()
         for (e in elements) if (collection.remove(e)) removed += e
-        if(removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
+        if (removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
         return removed.isNotEmpty()
     }
 
@@ -117,7 +134,7 @@ open class EventCollection<T>(protected val collection: MutableCollection<T>) : 
                 iter.remove()
             }
         }
-        if(removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
+        if (removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
         return removed.isNotEmpty()
     }
 
@@ -131,7 +148,7 @@ open class EventCollection<T>(protected val collection: MutableCollection<T>) : 
                 iter.remove()
             }
         }
-        if(removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
+        if (removed.isNotEmpty()) onRemoveElements.trigger(OnRemoveElementsEvent(collection, removed))
         return removed.isNotEmpty()
     }
 

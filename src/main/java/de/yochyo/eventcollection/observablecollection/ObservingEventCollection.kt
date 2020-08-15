@@ -2,9 +2,11 @@ package de.yochyo.eventcollection.observablecollection
 
 import de.yochyo.eventcollection.EventCollection
 import de.yochyo.eventcollection.events.OnChangeObjectEvent
+import de.yochyo.eventcollection.events.OnReplaceCollectionEvent
 import de.yochyo.eventcollection.observable.IObservableObject
 import de.yochyo.eventmanager.EventHandler
 import de.yochyo.eventmanager.Listener
+import java.io.Closeable
 
 /**
  * @see EventCollection
@@ -14,7 +16,7 @@ import de.yochyo.eventmanager.Listener
  *
  * @property onElementChange triggers an event when an element in the collection is changed (calls an OnChangeObjectEvent)
  */
-open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: MutableCollection<T>) : EventCollection<T>(collection), IObservableCollection<T, A> {
+open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: MutableCollection<T>) : EventCollection<T>(collection), IObservableCollection<T, A>, Closeable {
     private val onChangeListener = Listener.create<OnChangeObjectEvent<T, A>> { onElementChange.trigger(OnChangeObjectEvent(it.new, it.arg)) }
     val onElementChange = object : EventHandler<OnChangeObjectEvent<T, A>>() {
         override fun trigger(e: OnChangeObjectEvent<T, A>) {
@@ -31,7 +33,20 @@ open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: 
         onRemoveElements.registerListener {
             it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) }
         }
+        onReplaceCollection.registerListener {
+            for(element in it.old)
+                element.onChange.removeListener(onChangeListener)
+            for(element in it.new)
+                element.onChange.registerListener(onChangeListener)
+        }
     }
+
+    override fun close() {
+        for(element in collection)
+            element.onChange.removeListener(onChangeListener)
+    }
+
+
 
     override fun registerOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.registerListener(l)
     override fun registerOnElementChangeListener(priority: Int, l: (e: OnChangeObjectEvent<T, A>) -> Unit) = onElementChange.registerListener(priority, l)

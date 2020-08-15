@@ -1,6 +1,5 @@
 package de.yochyo.eventcollection.observablecollection
 
-import de.yochyo.eventcollection.EventCollection
 import de.yochyo.eventcollection.IEventCollection
 import de.yochyo.eventcollection.SubEventCollection
 import de.yochyo.eventcollection.events.OnChangeObjectEvent
@@ -37,6 +36,12 @@ open class ObservingSubEventCollection<T : IObservableObject<T, A>, A>(c: Mutabl
         onRemoveElements.registerListener {
             it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) }
         }
+    }
+
+    override fun close() {
+        super.close()
+        for (element in collection)
+            element.onChange.removeListener(onChangeListener)
     }
 
     override fun registerOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.registerListener(l)

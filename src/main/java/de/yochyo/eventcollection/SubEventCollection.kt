@@ -3,7 +3,9 @@ package de.yochyo.eventcollection
 import de.yochyo.eventcollection.events.OnAddElementsEvent
 import de.yochyo.eventcollection.events.OnClearEvent
 import de.yochyo.eventcollection.events.OnRemoveElementsEvent
+import de.yochyo.eventcollection.events.OnReplaceCollectionEvent
 import de.yochyo.eventmanager.Listener
+import java.io.Closeable
 import java.util.*
 import java.util.function.Predicate
 
@@ -21,7 +23,7 @@ import java.util.function.Predicate
  * @param parentCollection the parent EventCollection which content should be reflected here
  * @param filter if filter() returns true, an element will be contained in here
  */
-open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: IEventCollection<T>, filter: (e: T) -> Boolean) : EventCollection<T>(c) {
+open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: IEventCollection<T>, private val filter: (e: T) -> Boolean) : EventCollection<T>(c), Closeable {
     override fun add(element: T) = parentCollection.add(element)
     override fun addAll(elements: Collection<T>) = parentCollection.addAll(elements)
     override fun remove(element: T) = parentCollection.remove(element)
@@ -50,6 +52,12 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
             removeFromCollection(remove)
         }
     }
+    private val onReplaceCollectionListener = object : Listener<OnReplaceCollectionEvent<T>>() {
+        override fun onEvent(e: OnReplaceCollectionEvent<T>) {
+            initSubCollection()
+            onReplaceCollection.trigger(OnReplaceCollectionEvent(e.old, e.new))
+        }
+    }
 
     protected fun addToCollection(elements: Collection<T>) {
         collection.addAll(elements)
@@ -62,17 +70,24 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
     }
 
     init {
-        for (e in parentCollection)
-            if (filter(e)) c += e
+        initSubCollection()
 
         parentCollection.registerOnClearListener(onClearParent)
         parentCollection.registerOnAddElementsListener(onAddElementParent)
         parentCollection.registerOnRemoveElementsListener(onRemoveElementParent)
+        parentCollection.registerOnReplaceCollectionListener(onReplaceCollectionListener)
     }
 
-    fun destroy() {
+    private fun initSubCollection() {
+        collection.clear()
+        for (e in parentCollection)
+            if (filter(e)) collection.add(e)
+    }
+
+    override fun close() {
         parentCollection.removeOnClearListener(onClearParent)
         parentCollection.removeOnAddElementsListener(onAddElementParent)
         parentCollection.removeOnRemoveElementsListener(onRemoveElementParent)
+        parentCollection.removeOnReplaceCollectionListener(onReplaceCollectionListener)
     }
 }
