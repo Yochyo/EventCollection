@@ -16,7 +16,7 @@ import java.io.Closeable
  * @property onElementChange triggers an event when an element in the collection is changed (calls an OnChangeObjectEvent)
  */
 open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: MutableCollection<T>) : EventCollection<T>(collection), IObservableCollection<T, A>, Closeable {
-    private val onChangeListener = Listener.create<OnChangeObjectEvent<T, A>> { onElementChange.trigger(OnChangeObjectEvent(it.new, it.arg)) }
+    private val onChangeListener = Listener<OnChangeObjectEvent<T, A>> { onElementChange.trigger(OnChangeObjectEvent(it.new, it.arg)) }
     val onElementChange = object : EventHandler<OnChangeObjectEvent<T, A>>() {
         override fun trigger(e: OnChangeObjectEvent<T, A>) {
             super.trigger(e)
@@ -26,20 +26,16 @@ open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: 
 
     init {
         collection.forEach { it.onChange.registerListener(onChangeListener) }
-        onAddElements.registerListener(Listener {
-            it.elements.forEach { element -> element.onChange.registerListener(onChangeListener) }
-        })
+        onAddElements.registerListener { it.elements.forEach { element -> element.onChange.registerListener(onChangeListener) } }
 
-        onRemoveElements.registerListener(Listener {
-            it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) }
-        })
-        
-        onReplaceCollection.registerListener(Listener {
+        onRemoveElements.registerListener { it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) } }
+
+        onReplaceCollection.registerListener {
             for (element in it.old)
                 element.onChange.removeListener(onChangeListener)
             for (element in it.new)
                 element.onChange.registerListener(onChangeListener)
-        })
+        }
     }
 
     override fun close() {
