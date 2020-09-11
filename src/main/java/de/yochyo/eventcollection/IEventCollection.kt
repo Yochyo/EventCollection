@@ -6,11 +6,11 @@ import de.yochyo.eventmanager.Listener
 interface IEventCollection<T> : MutableCollection<T> {
     fun replaceCollection(c: MutableCollection<T>)
 
-    fun registerOnAddElementsListener(l: Listener<OnAddElementsEvent<T>>)
-    fun registerOnRemoveElementsListener(l: Listener<OnRemoveElementsEvent<T>>)
-    fun registerOnClearListener(l: Listener<OnClearEvent<T>>)
-    fun registerOnUpdateListener(l: Listener<OnUpdateEvent<T>>)
-    fun registerOnReplaceCollectionListener(l: Listener<OnReplaceCollectionEvent<T>>)
+    fun registerOnAddElementsListener(l: Listener<OnAddElementsEvent<T>>): Listener<OnAddElementsEvent<T>>
+    fun registerOnRemoveElementsListener(l: Listener<OnRemoveElementsEvent<T>>): Listener<OnRemoveElementsEvent<T>>
+    fun registerOnClearListener(l: Listener<OnClearEvent<T>>): Listener<OnClearEvent<T>>
+    fun registerOnUpdateListener(l: Listener<OnUpdateEvent<T>>): Listener<OnUpdateEvent<T>>
+    fun registerOnReplaceCollectionListener(l: Listener<OnReplaceCollectionEvent<T>>): Listener<OnReplaceCollectionEvent<T>>
 
     fun removeOnAddElementsListener(l: Listener<OnAddElementsEvent<T>>)
     fun removeOnRemoveElementsListener(l: Listener<OnRemoveElementsEvent<T>>)

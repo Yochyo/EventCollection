@@ -6,7 +6,7 @@
 
     <groupId>de.yochyo.eventcollection</groupId>
     <artifactId>EventCollection</artifactId>
-    <version>1.6.1</version>
+    <version>1.6.2</version>
 
     <properties>
         <kotlin.version>1.4.0</kotlin.version>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>de.yochyo.eventmanager</groupId>
             <artifactId>EventManager</artifactId>
-            <version>1.5.1</version>
+            <version>1.5.2</version>
         </dependency>
         <dependency>
             <groupId>de.yochyo.json</groupId>
