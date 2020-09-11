@@ -67,12 +67,6 @@ open class EventCollection<T>(protected var collection: MutableCollection<T>) : 
     override fun registerOnUpdateListener(l: Listener<OnUpdateEvent<T>>) = onUpdate.registerListener(l)
     override fun registerOnReplaceCollectionListener(l: Listener<OnReplaceCollectionEvent<T>>) = onReplaceCollection.registerListener(l)
 
-    override fun registerOnAddElementsListener(priority: Int, l: (e: OnAddElementsEvent<T>) -> Unit) = onAddElements.registerListener(priority, l)
-    override fun registerOnRemoveElementsListener(priority: Int, l: (e: OnRemoveElementsEvent<T>) -> Unit) = onRemoveElements.registerListener(priority, l)
-    override fun registerOnClearListener(priority: Int, l: (e: OnClearEvent<T>) -> Unit) = onClear.registerListener(priority, l)
-    override fun registerOnUpdateListener(priority: Int, l: (e: OnUpdateEvent<T>) -> Unit) = onUpdate.registerListener(priority, l)
-    override fun registerOnReplaceCollectionListener(priority: Int, l: (e: OnReplaceCollectionEvent<T>) -> Unit) = onReplaceCollection.registerListener(priority, l)
-
     override fun removeOnAddElementsListener(l: Listener<OnAddElementsEvent<T>>) = onAddElements.removeListener(l)
     override fun removeOnRemoveElementsListener(l: Listener<OnRemoveElementsEvent<T>>) = onRemoveElements.removeListener(l)
     override fun removeOnClearListener(l: Listener<OnClearEvent<T>>) = onClear.removeListener(l)

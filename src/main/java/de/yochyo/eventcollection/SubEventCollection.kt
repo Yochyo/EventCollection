@@ -32,31 +32,23 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
     override fun removeIf(filter: Predicate<in T>) = parentCollection.removeIf(filter)
     override fun retainAll(elements: Collection<T>) = parentCollection.retainAll(elements)
 
-    private val onClearParent = object : Listener<OnClearEvent<T>>() {
-        override fun onEvent(e: OnClearEvent<T>) {
-            c.clear()
-            onClear.trigger(OnClearEvent(c))
-        }
+    private val onClearParent = Listener<OnClearEvent<T>> {
+        c.clear()
+        onClear.trigger(OnClearEvent(c))
     }
-    private val onAddElementParent = object : Listener<OnAddElementsEvent<T>>() {
-        override fun onEvent(e: OnAddElementsEvent<T>) {
-            val add = LinkedList<T>()
-            e.elements.forEach { if (filter(it)) add += it }
-            addToCollection(add)
-        }
+    private val onAddElementParent = Listener<OnAddElementsEvent<T>> {
+        val add = LinkedList<T>()
+        it.elements.forEach { element -> if (filter(element)) add += element }
+        addToCollection(add)
     }
-    private val onRemoveElementParent = object : Listener<OnRemoveElementsEvent<T>>() {
-        override fun onEvent(e: OnRemoveElementsEvent<T>) {
-            val remove = LinkedList<T>()
-            e.elements.forEach { if (filter(it)) remove += it }
-            removeFromCollection(remove)
-        }
+    private val onRemoveElementParent = Listener<OnRemoveElementsEvent<T>> {
+        val remove = LinkedList<T>()
+        it.elements.forEach { element -> if (filter(element)) remove += element }
+        removeFromCollection(remove)
     }
-    private val onReplaceCollectionListener = object : Listener<OnReplaceCollectionEvent<T>>() {
-        override fun onEvent(e: OnReplaceCollectionEvent<T>) {
-            initSubCollection()
-            onReplaceCollection.trigger(OnReplaceCollectionEvent(e.old, e.new))
-        }
+    private val onReplaceCollectionListener = Listener<OnReplaceCollectionEvent<T>> {
+        initSubCollection()
+        onReplaceCollection.trigger(OnReplaceCollectionEvent(it.old, it.new))
     }
 
     protected fun addToCollection(elements: Collection<T>) {
@@ -78,7 +70,7 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
         parentCollection.registerOnReplaceCollectionListener(onReplaceCollectionListener)
     }
 
-    private fun initSubCollection() {
+    protected open fun initSubCollection() {
         collection.clear()
         for (e in parentCollection)
             if (filter(e)) collection.add(e)

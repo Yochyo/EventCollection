@@ -2,7 +2,6 @@ package de.yochyo.eventcollection.observablecollection
 
 import de.yochyo.eventcollection.EventCollection
 import de.yochyo.eventcollection.events.OnChangeObjectEvent
-import de.yochyo.eventcollection.events.OnReplaceCollectionEvent
 import de.yochyo.eventcollection.observable.IObservableObject
 import de.yochyo.eventmanager.EventHandler
 import de.yochyo.eventmanager.Listener
@@ -27,29 +26,29 @@ open class ObservingEventCollection<T : IObservableObject<T, A>, A>(collection: 
 
     init {
         collection.forEach { it.onChange.registerListener(onChangeListener) }
-        onAddElements.registerListener {
+        onAddElements.registerListener(Listener {
             it.elements.forEach { element -> element.onChange.registerListener(onChangeListener) }
-        }
-        onRemoveElements.registerListener {
+        })
+
+        onRemoveElements.registerListener(Listener {
             it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) }
-        }
-        onReplaceCollection.registerListener {
-            for(element in it.old)
+        })
+        
+        onReplaceCollection.registerListener(Listener {
+            for (element in it.old)
                 element.onChange.removeListener(onChangeListener)
-            for(element in it.new)
+            for (element in it.new)
                 element.onChange.registerListener(onChangeListener)
-        }
+        })
     }
 
     override fun close() {
-        for(element in collection)
+        for (element in collection)
             element.onChange.removeListener(onChangeListener)
     }
 
 
-
     override fun registerOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.registerListener(l)
-    override fun registerOnElementChangeListener(priority: Int, l: (e: OnChangeObjectEvent<T, A>) -> Unit) = onElementChange.registerListener(priority, l)
     override fun removeOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.removeListener(l)
     override fun triggerOnElementChangeEvent(e: OnChangeObjectEvent<T, A>) = onElementChange.trigger(e)
 }
