@@ -63,7 +63,6 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
     }
 
     init {
-        c.clear()
         initSubCollection()
 
         parentCollection.registerOnClearListener(onClearParent)
