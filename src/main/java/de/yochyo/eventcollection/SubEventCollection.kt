@@ -31,6 +31,7 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
     override fun removeAll(elements: Collection<T>) = parentCollection.removeAll(elements)
     override fun removeIf(filter: Predicate<in T>) = parentCollection.removeIf(filter)
     override fun retainAll(elements: Collection<T>) = parentCollection.retainAll(elements)
+    override fun replaceCollection(c: MutableCollection<T>) = parentCollection.replaceCollection(c)
 
     private val onClearParent = Listener<OnClearEvent<T>> {
         c.clear()

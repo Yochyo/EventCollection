@@ -6,7 +6,7 @@
 
     <groupId>de.yochyo.eventcollection</groupId>
     <artifactId>EventCollection</artifactId>
-    <version>1.6.2</version>
+    <version>1.6.3</version>
 
     <properties>
         <kotlin.version>1.4.0</kotlin.version>
