@@ -23,7 +23,7 @@ import java.util.function.Predicate
  * @param parentCollection the parent EventCollection which content should be reflected here
  * @param filter if filter() returns true, an element will be contained in here
  */
-open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: IEventCollection<T>, private val filter: (e: T) -> Boolean) : EventCollection<T>(c), Closeable {
+open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: IEventCollection<T>, protected val filter: (e: T) -> Boolean) : EventCollection<T>(c), Closeable {
     override fun add(element: T) = parentCollection.add(element)
     override fun addAll(elements: Collection<T>) = parentCollection.addAll(elements)
     override fun remove(element: T) = parentCollection.remove(element)
@@ -62,6 +62,7 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
     }
 
     init {
+        c.clear()
         initSubCollection()
 
         parentCollection.registerOnClearListener(onClearParent)
@@ -70,7 +71,7 @@ open class SubEventCollection<T>(c: MutableCollection<T>, val parentCollection: 
         parentCollection.registerOnReplaceCollectionListener(onReplaceCollectionListener)
     }
 
-    protected open fun initSubCollection() {
+    protected fun initSubCollection() {
         collection.clear()
         for (e in parentCollection)
             if (filter(e)) collection.add(e)

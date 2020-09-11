@@ -4,6 +4,7 @@ import de.yochyo.eventcollection.IEventCollection
 import de.yochyo.eventcollection.SubEventCollection
 import de.yochyo.eventcollection.events.OnAddElementsEvent
 import de.yochyo.eventcollection.events.OnChangeObjectEvent
+import de.yochyo.eventcollection.events.OnReplaceCollectionEvent
 import de.yochyo.eventcollection.observable.IObservableObject
 import de.yochyo.eventmanager.EventHandler
 import de.yochyo.eventmanager.Listener
@@ -37,28 +38,23 @@ open class ObservingSubEventCollection<T : IObservableObject<T, A>, A>(c: Mutabl
         }
     }
 
+    private val onReplaceCollectionListener = Listener<OnReplaceCollectionEvent<T>> {
+        for (element in it.old)
+            element.onChange.removeListener(onChangeListener)
+        onReplaceCollection.trigger(OnReplaceCollectionEvent(it.old, it.new))
+    }
+
     init {
         if (parentCollection is IObservableCollection<*, *>) {
             val parent = parentCollection as IObservableCollection<T, A>
             parent.registerOnElementChangeListener(onChangeElementInParent)
         }
 
+        parentCollection.registerOnReplaceCollectionListener(onReplaceCollectionListener)
 
-        c.forEach { it.onChange.registerListener(onChangeListener) }
-        onAddElements.registerListener(Listener {
-            it.elements.forEach { element -> element.onChange.registerListener(onChangeListener) }
-        })
-        onRemoveElements.registerListener(Listener {
-            it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) }
-        })
-    }
-
-    override fun initSubCollection() {
-        for (element in collection)
-            element.onChange.removeListener(onChangeListener)
-        super.initSubCollection()
-        for (element in collection)
-            element.onChange.registerListener(onChangeListener)
+        collection.forEach { it.onChange.registerListener(onChangeListener) }
+        onAddElements.registerListener { it.elements.forEach { element -> element.onChange.registerListener(onChangeListener) } }
+        onRemoveElements.registerListener { it.elements.forEach { element -> element.onChange.removeListener(onChangeListener) } }
     }
 
     override fun close() {
@@ -67,8 +63,9 @@ open class ObservingSubEventCollection<T : IObservableObject<T, A>, A>(c: Mutabl
             val parent = parentCollection as IObservableCollection<T, A>
             parent.removeOnElementChangeListener(onChangeElementInParent)
         }
-        for (element in collection)
-            element.onChange.removeListener(onChangeListener)
+        parentCollection.removeOnReplaceCollectionListener(onReplaceCollectionListener)
+
+        collection.forEach { it.onChange.removeListener(onChangeListener) }
     }
 
     override fun registerOnElementChangeListener(l: Listener<OnChangeObjectEvent<T, A>>) = onElementChange.registerListener(l)
