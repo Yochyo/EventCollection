@@ -6,22 +6,17 @@
 
     <groupId>de.yochyo.eventcollection</groupId>
     <artifactId>EventCollection</artifactId>
-    <version>1.6.3</version>
+    <version>1.6.4</version>
 
     <properties>
-        <kotlin.version>1.4.0</kotlin.version>
+        <kotlin.version>1.4.10</kotlin.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>de.yochyo.eventmanager</groupId>
             <artifactId>EventManager</artifactId>
-            <version>1.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>de.yochyo.json</groupId>
-            <artifactId>JSON</artifactId>
-            <version>1.0</version>
+            <version>1.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
